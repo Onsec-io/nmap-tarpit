@@ -1,4 +1,4 @@
-# nmap-tarpit
+# nmap-tarpit plugin
 A plugin for detecting hosts protected by an IPS or Firewall with TCP Tarpit.
 It simulates port scanning and tracks the response of the scanned system.
 
@@ -6,12 +6,13 @@ The script selects random ports from the upper and lower ranges and attempts to 
 If these random ports are open, then the host is marked as a TARPIT.
 This allows for separate scanning of such hosts by adjusting the scanning parameters individually.
 
-Usage examples
+Usage examples:
 
     nmap -n -sn -Pn _TARGET_ --script tarpit.nse
     nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "lower_ports_count=5" -oX output.xml
 
 Args:
+
 lower_ports_count - count of random ports in range 1-1024. The default value is 7.
 
 upper_ports_count - count of random ports in range 1025-65535. The default value is 7.
