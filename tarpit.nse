@@ -19,10 +19,11 @@ This allows for separate scanning of such hosts by adjusting the scanning parame
 -- @args tarpit.upper_ports_count
 --       Set the count of random ports in range 1025-65535. The default value is 7.
 -- @args tarpit.socket_timeout
---       Set the timeout for socket in milliseconds. The default value is 150.
+--       Set the timeout for socket in milliseconds. The default value is 200.
 --
 -- @changelog
 -- 2023-03-05 - v0.1 - created by 0x566164696D
+-- 2023-03-09 - v0.2 - minor improvements
 --
 
 author     = "0x566164696D"
@@ -37,7 +38,7 @@ local table     = require "table"
 
 local lower_ports_count = stdnse.get_script_args('tarpit.lower_ports_count') or 7
 local upper_ports_count = stdnse.get_script_args('tarpit.upper_ports_count') or 7
-local socket_timeout    = stdnse.get_script_args('tarpit.socket_timeout')    or 150
+local socket_timeout    = stdnse.get_script_args('tarpit.socket_timeout')    or 200
 
 
 local function random_ports()
@@ -99,7 +100,7 @@ prerule = function()
   return true
 end
 
-hostrule = function()
+hostrule = function(host)
   return true
 end
 
@@ -111,31 +112,32 @@ action = function(host)
 
   local ports            = random_ports()
   local scan1_open_ports = check_ports_multithread(host.ip, ports)
-
-  if #scan1_open_ports > 0 then
-     table.sort(scan1_open_ports)
-     stdnse.verbose2(string.format("1st scan opened ports: %s", table.concat(scan1_open_ports, ",") ))
-  end
+  stdnse.verbose2(string.format("%s: random ports         : %s", host.ip, table.concat(ports, ",") ))
 
   if #scan1_open_ports == 0 then
     return
   end
 
+  table.sort(scan1_open_ports)
+  stdnse.verbose2(string.format("%s: 1st scan opened ports: %s", host.ip, table.concat(scan1_open_ports, ",") ))
+
   if #scan1_open_ports == #ports then
-    stdnse.verbose2(string.format("random ports         : %s", table.concat(ports, ",") ))
-    stdnse.verbose2("Random ports are equal to open ports.")
-    return stdnse.format_output(true, "IPS / TCP TARPIT detected!" )
+    stdnse.verbose2("Random ports are equal to open ports (scan 1).")
+    return stdnse.format_output(true, string.format("%s: IPS / TCP TARPIT detected!", host.ip ) )
   end
 
   local scan2_open_ports = check_ports_multithread(host.ip, ports)
-  if #scan2_open_ports > 0 then
-     table.sort(scan2_open_ports)
-     stdnse.verbose2(string.format("2nd scan opened ports: %s", table.concat(scan2_open_ports, ",") ))
+
+  if #scan2_open_ports == 0 then
+    return
   end
 
-  if #ports == #scan2_open_ports or #scan2_open_ports > #scan1_open_ports then
-    stdnse.verbose2("Random ports are equal to open ports or when rescanned more open ports were detected.")
-    return stdnse.format_output(true, "IPS / TCP TARPIT detected!" )
+  table.sort(scan2_open_ports)
+  stdnse.verbose2(string.format("%s: 2nd scan opened ports: %s", host.ip, table.concat(scan2_open_ports, ",") ))
+
+  if #ports == #scan2_open_ports then
+    stdnse.verbose2("Random ports are equal to open ports (scan 2).")
+    return stdnse.format_output(true, string.format("%s: IPS / TCP TARPIT detected!", host.ip ) )
   end
 
 end

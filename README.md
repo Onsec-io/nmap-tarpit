@@ -17,7 +17,7 @@ lower_ports_count - count of random ports in range 1-1024. The default value is 
 
 upper_ports_count - count of random ports in range 1025-65535. The default value is 7.
 
-socket_timeout    - timeout for socket in milliseconds. The default value is 150.
+socket_timeout    - timeout for socket in milliseconds. The default value is 200.
 
 ---
 
@@ -36,4 +36,4 @@ lower_ports_count - 在1-1024范围内的随机端口数量。默认值为7。
 
 upper_ports_count - 在1025-65535范围内的随机端口数量。默认值为7。
 
-socket_timeout    - 套接字超时时间，单位是毫秒。默认值为150。
+socket_timeout    - 套接字超时时间，单位是毫秒。默认值为200。
