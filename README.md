@@ -9,15 +9,16 @@ This allows for separate scanning of such hosts by adjusting the scanning parame
 Usage examples:
 
     nmap -n -sn -Pn _TARGET_ --script tarpit.nse
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "lower_ports_count=5" -oX output.xml
+    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "ports_count=25" -oX output.xml
 
 Args:
 
-lower_ports_count - count of random ports in range 1-1024. The default value is 7.
+ports_count - count of random ports in range 1025-49151. The default value is 20.
 
-upper_ports_count - count of random ports in range 1025-65535. The default value is 7.
+socket_timeout - timeout for socket in milliseconds. The default value is 8000.
 
-socket_timeout    - timeout for socket in milliseconds. The default value is 200.
+open_ports_percent - percentage of open ports at which the host will be marked as a tarpit. The default value is 80.
+
 
 ---
 
@@ -28,12 +29,12 @@ socket_timeout    - timeout for socket in milliseconds. The default value is 200
 使用示例
 
     nmap -n -sn -Pn _TARGET_ --script tarpit.nse
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "lower_ports_count=5" -oX output.xml
+    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "ports_count=25" -oX output.xml
 
 的中文翻译是 "启动参数
 
-lower_ports_count - 在1-1024范围内的随机端口数量。默认值为7。
-
-upper_ports_count - 在1025-65535范围内的随机端口数量。默认值为7。
+ports_count - 1025-49151范围内随机端口的计数。默认值为20。
 
 socket_timeout    - 套接字超时时间，单位是毫秒。默认值为200。
+
+open_ports_percent - 开放端口百分比，当该主机的开放端口达到此百分比时将被标记为 tarpit。默认值为80。
