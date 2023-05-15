@@ -8,16 +8,43 @@ This allows for separate scanning of such hosts by adjusting the scanning parame
 
 Usage examples:
 
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "ports_count=25" -oX output.xml
+With default settings
+
+    # nmap \
+        -T4 \
+        -sn \
+        -PE \
+        -PY \
+        -PO \
+        -PS21,22,25,80,443,8080 \
+        -PA21,22,25,80,443,8080 \
+        --script tarpit.nse \
+        -oX output.xml \
+        _TARGET_
+
+With arguments
+
+    # nmap \
+        -T4 \
+        -sn \
+        -PE \
+        -PY \
+        -PO \
+        -PS21,22,25,80,443,8080 \
+        -PA21,22,25,80,443,8080 \
+        -script tarpit.nse --script-args "ports_count=25, scan1_timeout=300, scan2_timeout=1000, open_ports_percent=75" \
+        -oX output.xml \
+        _TARGET_
 
 Args:
 
-ports_count - count of random ports in range 1025-49151. The default value is 20.
+ports_count - count of random ports in range 1025-49151. The default value is 14.
 
-socket_timeout - timeout for socket in milliseconds. The default value is 8000.
+scan1_timeout - timeout for the first cycle of port scanning. The cycle is necessary to provoke the host to trigger tarpit. The default value is 500ms.
 
-open_ports_percent - percentage of open ports at which the host will be marked as a tarpit. The default value is 80.
+scan2_timeout - timeout for the second cycle of port scanning, at this stage the main checking is performed. The default value is 2500ms.
+
+open_ports_percent - percentage of open ports at which the host will be marked as a tarpit. The default value is 70.
 
 
 ---
@@ -28,13 +55,38 @@ open_ports_percent - percentage of open ports at which the host will be marked a
 
 使用示例
 
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse
-    nmap -n -sn -Pn _TARGET_ --script tarpit.nse --script-args "ports_count=25" -oX output.xml
+    # nmap \
+        -T4 \
+        -sn \
+        -PE \
+        -PY \
+        -PO \
+        -PS21,22,25,80,443,8080 \
+        -PA21,22,25,80,443,8080 \
+        --script tarpit.nse \
+        -oX output.xml \
+        _TARGET_
+
+带有参数
+
+      # nmap \
+        -T4 \
+        -sn \
+        -PE \
+        -PY \
+        -PO \
+        -PS21,22,25,80,443,8080 \
+        -PA21,22,25,80,443,8080 \
+        -script tarpit.nse --script-args "ports_count=25, scan1_timeout=300, scan2_timeout=1000, open_ports_percent=75" \
+        -oX output.xml \
+        _TARGET_
 
 的中文翻译是 "启动参数
 
-ports_count - 1025-49151范围内随机端口的计数。默认值为20。
+ports_count - 随机端口的数量在 1025-49151 范围内。默认值为14。
 
-socket_timeout    - 套接字超时时间，单位是毫秒。默认值为200。
+scan1_timeout - 端口扫描的第一个循环的超时时间。循环必要来促使主机触发tarpit。默认值为500ms。
 
-open_ports_percent - 开放端口百分比，当该主机的开放端口达到此百分比时将被标记为 tarpit。默认值为80。
+scan2_timeout - 端口扫描的第二个循环的超时时间，此阶段进行主要检查。默认值为2500ms。
+
+open_ports_percent - 开放端口的百分比，该主机将被标记为 tarpit。默认值为70。
